@@ -19,7 +19,6 @@ rate-limiting and billing use-cases.
 """
 from __future__ import annotations
 
-import os
 import threading
 from typing import Iterable
 

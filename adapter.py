@@ -399,7 +399,7 @@ class DeepSeekAdapter:
         except (KeyError, TypeError) as e:
             raise RuntimeError(
                 f"Unexpected challenge response structure: {data.get('code', 'unknown')} - {data.get('msg', str(e))}"
-            )
+            ) from e
 
     def _solve(self, challenge_data: dict) -> str:
         nonce = self.solver.solve(
@@ -699,7 +699,7 @@ class DeepSeekAdapter:
         thinking_parts = []
         frag_type = None  # None, 'thinking', 'content'
 
-        for event_type, data in events:
+        for _event_type, data in events:
             if not isinstance(data, dict):
                 continue
             p = data.get("p", "")

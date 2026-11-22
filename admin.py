@@ -12,9 +12,9 @@ from pydantic import BaseModel
 
 from account_pool import AccountPool
 from crypto import is_enabled as crypto_is_enabled, _resolve_key
-from ip_utils import get_real_client_ip, is_trusted_proxy
+from ip_utils import get_real_client_ip
 from logger import get_logger
-from stats_history import get_history, start_sampler
+from stats_history import get_history
 from api_key_store import get_api_key_store
 
 log = get_logger("admin")
@@ -230,11 +230,11 @@ def _pool_error(e: Exception):
     if isinstance(e, KeyError):
         raise HTTPException(status_code=404, detail=str(e).strip("'"))
     if isinstance(e, PermissionError):
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
     if isinstance(e, RuntimeError):
         raise HTTPException(status_code=409, detail=str(e))
     if isinstance(e, ValueError):
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
     raise e
 
 
@@ -280,7 +280,7 @@ async def create_api_key(req: ApiKeyCreateRequest, request: Request, response: R
     try:
         return get_api_key_store().create_key(req.name)
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 @router.delete("/api-keys/{key_id}")
