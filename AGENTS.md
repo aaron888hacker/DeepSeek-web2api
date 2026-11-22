@@ -236,7 +236,7 @@
 ## 2. 目录结构
 
 ```
-deepseek-web2api-free/
+DeepSeek-web2api/
 ├── server.py              # FastAPI 服务入口（路由、请求模型、SSE 组装）
 ├── adapter.py             # DeepSeek API 适配器（PoW、会话、SSE 解析）
 ├── chat_service.py        # 协议无关的聊天执行与事件
@@ -299,7 +299,7 @@ deepseek-web2api-free/
 
 ```bash
 # 1. 克隆/进入项目目录
-cd deepseek-web2api-free
+cd DeepSeek-web2api
 
 # 2. 安装依赖
 pip install -r requirements.txt

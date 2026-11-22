@@ -42,8 +42,8 @@
 
 ```bash
 # 1. 克隆/下载本项目
-git clone https://github.com/snake-aabb-wtf/deepseek-web2api-free.git
-cd deepseek-web2api-free
+git clone https://github.com/aaron888hacker/DeepSeek-web2api.git
+cd DeepSeek-web2api
 
 # 2. 安装依赖（Windows 推荐直接用 start.bat 自动创建虚拟环境并安装；手动方式：）
 pip install -r requirements.txt

@@ -43,8 +43,8 @@ Current version: **v1.0.0**
 
 ```bash
 # 1. Clone / download this project
-git clone https://github.com/snake-aabb-wtf/deepseek-web2api-free.git
-cd deepseek-web2api-free
+git clone https://github.com/aaron888hacker/DeepSeek-web2api.git
+cd DeepSeek-web2api
 
 # 2. Install dependencies (on Windows, prefer start.bat which auto-creates the venv and installs; manual way:)
 pip install -r requirements.txt
