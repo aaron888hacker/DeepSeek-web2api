@@ -112,7 +112,7 @@ def test_every_divergence_resends_the_full_prompt(monkeypatch):
     first.record_message_id(2, full_prompt="User: 第一句")
 
     parent = 2
-    for turn, text in enumerate(["User: 第二句", "User: 第三句"], start=1):
+    for _turn, text in enumerate(["User: 第二句", "User: 第三句"], start=1):
         acq = server.AcquiredAccount(account, cache_key=key)
         assert acq.prepare_prompt(text) == text          # full prompt, every time
         assert acq.create_session() == "session-account-a-1"

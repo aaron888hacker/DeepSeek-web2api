@@ -3,7 +3,6 @@ Anthropic /v1/messages format adapter for DeepSeek Chat proxy.
 Maps Anthropic request/response format to/from the internal token stream.
 """
 import json
-import time
 import uuid
 from typing import Optional, Any
 

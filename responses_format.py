@@ -134,7 +134,7 @@ def normalize_input(request: ResponsesRequest, history: list[dict]):
     for m in messages:
         if m['role'] == 'tool': m['role'] = 'user'
     normalized, attachments = normalize_images(messages, 'openai')
-    for message, role in zip(normalized, roles):
+    for message, role in zip(normalized, roles, strict=True):
         message['role'] = role
         text = str(message.get('content', ''))
         message['_image_digests'] = [a.asset.digest for a in attachments if a.marker in text]

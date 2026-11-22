@@ -11,17 +11,14 @@ import threading
 import time
 import uuid
 import hashlib
-import asyncio
 from contextlib import aclosing
-from typing import Optional, Union, Any
+from typing import Optional, Union
 
 import uvicorn
 from dotenv import load_dotenv
 import os as _os
-from pathlib import Path
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import StreamingResponse, FileResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from starlette.concurrency import run_in_threadpool
@@ -30,15 +27,13 @@ from image_inputs import ImageAttachment, ImageError, normalize_images
 from image_http import ImageBodyLimit, image_error_response
 from turn_preparation import prepare_turn
 from chat_service import ChatService
-from chat_runtime import (prepare_account, thread_step as _thread_step,
+from chat_runtime import (prepare_account,
     iterate_upstream as _iterate_upstream, AccountStreamingResponse as _AccountStreamingResponse)
 
 from adapter import (
-    DeepSeekAdapter,
     UpstreamEmptyError,
     UpstreamHintError,
     RateLimitError,
-    UserMutedError,
 )
 from admin import (
     router as admin_router,
@@ -49,12 +44,8 @@ from admin import (
 )
 from stats_history import start_sampler
 from model_router import DEFAULT_MODEL_TYPE
-from tool_dsml import (
-    parse_dsml_tool_calls,
-    format_tool_calls_for_prompt,
-    build_dsml_tool_prompt,
-)
-from tool_sieve import StreamSieve, SieveEvent
+from tool_dsml import parse_dsml_tool_calls
+from tool_sieve import StreamSieve
 from anthropic_format import (
     AnthropicRequest,
     build_anthropic_prompt,
@@ -66,7 +57,7 @@ from logger import get_logger, configure_from_env
 from crypto import is_enabled as crypto_is_enabled
 from token_counter import count_text
 from rate_limiter import RateLimiter
-from ip_utils import get_real_client_ip, is_trusted_proxy
+from ip_utils import get_real_client_ip
 from model_router import ModelRouter
 from session_cache import SessionCache, ChatSession, delta_prompt
 from api_key_store import get_api_key_store
@@ -872,7 +863,6 @@ def _anthropic_nonstream(msg_id: str, prompt: str, tool_names: list[str],
     try:
         turn = prepare_turn(acq, prompt, attachments, thinking=thinking_mode,
                             model_type=model_type or DEFAULT_MODEL_TYPE)
-        eff, ds_id = turn.prompt, turn.session_id
         t0 = time.time()
         ready_out: dict = {}
         content, thinking = ChatService.invoke(acq, turn, dict(model_type=model_type,
@@ -895,18 +885,18 @@ def _anthropic_nonstream(msg_id: str, prompt: str, tool_names: list[str],
         raise HTTPException(
             status_code=429,
             detail=f"上游限流：{e.args[0] if e.args else '请求过于频繁'}，请稍后重试",
-        )
+        ) from e
     except UpstreamHintError as e:
         get_stats().record(MODEL_NAME, 0, success=False)
         pool.mark_error(acq.acct, str(e))
-        raise HTTPException(status_code=502, detail=str(e))
+        raise HTTPException(status_code=502, detail=str(e)) from e
     except UpstreamEmptyError:
         # Empty upstream bodies are transient and should not poison the
         # account pool, but the client still needs a meaningful 502.
         get_stats().record(MODEL_NAME, 0, success=False)
         if cache_key:
             SESSION_CACHE.invalidate(cache_key)
-        raise HTTPException(status_code=502, detail="上游返回空响应（可能触发限流），请稍后重试")
+        raise HTTPException(status_code=502, detail="上游返回空响应（可能触发限流），请稍后重试") from None
     except Exception as e:
         get_stats().record(MODEL_NAME, 0, success=False)
         pool.mark_error(acq.acct, str(e))
@@ -932,7 +922,6 @@ async def _anthropic_stream(msg_id: str, prompt: str, tool_names: list[str],
                             cache_key: str | None = None,
                             attachments: tuple[ImageAttachment, ...] = ()):
     acq, turn = await _prepare_stream_account(prompt, attachments, cache_key, thinking_mode, model_type)
-    eff, ds_id = turn.prompt, turn.session_id
     t0 = time.time()
 
     async def event_stream():
@@ -988,7 +977,6 @@ def _handle_nonstream(proxy_id: str, prompt: str, tools: list[ToolDef] | None = 
     try:
         turn = prepare_turn(acq, prompt, attachments, thinking=thinking_mode,
                             model_type=model_type or DEFAULT_MODEL_TYPE)
-        eff, ds_id = turn.prompt, turn.session_id
         t0 = time.time()
         ready_out: dict = {}
         content, thinking = ChatService.invoke(acq, turn, dict(model_type=model_type,
@@ -1011,18 +999,18 @@ def _handle_nonstream(proxy_id: str, prompt: str, tools: list[ToolDef] | None = 
         get_stats().record(MODEL_NAME, 0, success=False)
         if cache_key:
             SESSION_CACHE.invalidate(cache_key)
-        raise HTTPException(status_code=429, detail=f"上游限流：{e.args[0] if e.args else '请求过于频繁'}，请稍后重试")
+        raise HTTPException(status_code=429, detail=f"上游限流：{e.args[0] if e.args else '请求过于频繁'}，请稍后重试") from e
     except UpstreamHintError as e:
         get_stats().record(MODEL_NAME, 0, success=False)
         pool.mark_error(acq.acct, str(e))
-        raise HTTPException(status_code=502, detail=str(e))
+        raise HTTPException(status_code=502, detail=str(e)) from e
     except UpstreamEmptyError as e:
         # Transient empty responses (stale pooled connection / upstream
         # hiccup) — retried in the adapter already; do not poison the pool.
         get_stats().record(MODEL_NAME, 0, success=False)
         if cache_key:
             SESSION_CACHE.invalidate(cache_key)
-        raise HTTPException(status_code=502, detail="上游返回空响应（可能触发限流），请稍后重试")
+        raise HTTPException(status_code=502, detail="上游返回空响应（可能触发限流），请稍后重试") from e
     except Exception as e:
         get_stats().record(MODEL_NAME, 0, success=False)
         pool.mark_error(acq.acct, str(e))
@@ -1095,7 +1083,6 @@ async def _handle_stream(proxy_id: str, prompt: str, tools: list[ToolDef] | None
     """Streaming completion with StreamSieve tool call detection and thinking support."""
     prompt_tokens = count_text(prompt)
     acq, turn = await _prepare_stream_account(prompt, attachments, cache_key, thinking_mode, model_type)
-    eff, ds_id = turn.prompt, turn.session_id
     tool_names = _get_tool_names(tools)
     t0 = time.time()
 
