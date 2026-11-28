@@ -172,6 +172,8 @@ curl http://localhost:8080/v1/models \
 
 The project ships a built-in web admin UI (React SPA since v3.0.0), providing request statistics and account pool management:
 
+![Admin panel overview](docs/images/dashboard.png)
+
 ```
 Open in browser: http://localhost:8080/webui/
 ```

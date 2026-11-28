@@ -171,6 +171,8 @@ curl http://localhost:8080/v1/models \
 
 项目内置 Web 管理界面（v3.0.0 起为 React SPA），提供请求统计和账号池管理功能：
 
+![管理面板概览](docs/images/dashboard.png)
+
 ```
 浏览器打开 http://localhost:8080/webui/
 ```
