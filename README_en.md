@@ -962,13 +962,7 @@ Install `requirements.txt`; the declared minimum versions are:
 
 ## License
 
-This project is released into the **public domain** under the **Unlicense**.
-
-```
-This is free and unencumbered software released into the public domain.
-```
-
-You are free to copy, modify, publish, use, compile, sell, or distribute this software, in either source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means.
+This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**. See [LICENSE](LICENSE) for the full terms.
 
 **This software is provided without any warranty**, without guarantee of service availability, accuracy, or stability. Any consequences arising from the use of this project are the sole responsibility of the user.
 

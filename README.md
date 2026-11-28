@@ -963,13 +963,7 @@ Responses 的 TTL、记录数量、字节和历史深度限制独立配置，见
 
 ## 许可
 
-本项目使用 **Unlicense** 协议正式发布到公有领域（public domain）。
-
-```
-This is free and unencumbered software released into the public domain.
-```
-
-你可以自由地复制、修改、发布、使用、编译、出售或分发本软件，无论用于商业或非商业目的，无论以任何形式。
+本项目采用 **GNU General Public License v3.0（GPL-3.0）** 许可证发布，完整条款见 [LICENSE](LICENSE)。
 
 **不提供任何保证**，不保证服务的可用性、准确性、稳定性。使用本项目所产生的任何后果由使用者自行承担。
 
