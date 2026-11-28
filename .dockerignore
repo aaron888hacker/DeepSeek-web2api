@@ -1,0 +1,16 @@
+.git
+.github
+.venv
+venv
+env
+__pycache__
+*.py[cod]
+.ruff_cache
+.pytest_cache
+tests
+data
+.env
+server.log
+webui-new/node_modules
+webui-new/dist
+docs

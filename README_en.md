@@ -1,5 +1,16 @@
 # DeepSeek Chat API Proxy
 
+[English](README_en.md) · [简体中文](README.md)
+
+<p align="center">
+  <a href="https://github.com/aaron888hacker/DeepSeek-web2api/stargazers"><img src="https://img.shields.io/github/stars/aaron888hacker/DeepSeek-web2api?style=flat-square&logo=github" alt="Stars"/></a>
+  <a href="https://github.com/aaron888hacker/DeepSeek-web2api/releases/latest"><img src="https://img.shields.io/github/v/release/aaron888hacker/DeepSeek-web2api?style=flat-square" alt="Latest release"/></a>
+  <img src="https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square&logo=python" alt="Python 3.10+"/>
+  <img src="https://img.shields.io/badge/license-GPL--3.0-blue?style=flat-square" alt="GPL-3.0"/>
+  <img src="https://img.shields.io/badge/docker-ready-2496ED?style=flat-square&logo=docker" alt="Docker ready"/>
+  <a href="https://github.com/aaron888hacker/DeepSeek-web2api/actions/workflows/ci.yml"><img src="https://github.com/aaron888hacker/DeepSeek-web2api/actions/workflows/ci.yml/badge.svg" alt="CI"/></a>
+</p>
+
 Responses API: verified with Python sync/async and JavaScript SDKs for text/images, typed SSE, multiple function calls and immutable `previous_response_id` state. See the [supported subset and examples](docs/responses-api_en.md).
 
 Current version: **v1.0.0** 
@@ -7,6 +18,19 @@ Current version: **v1.0.0**
 > Convert DeepSeek Chat's (chat.deepseek.com) private API into an **OpenAI / Anthropic compatible** format.
 
 **Disclaimer**: This project is for learning and research purposes only. It is an unofficial project and is not affiliated with DeepSeek. Use at your own risk; stability is not guaranteed.
+
+> **Why star it?** One process exposes OpenAI, Anthropic, and Responses compatible endpoints with streaming, reasoning, function calling, a multi-account pool, rate limiting, usage stats, and a WebUI. If you want to use an OpenAI SDK or Claude Code with a DeepSeek web account, this can save you days.
+
+## ⚡ 30-Second Start (Docker)
+
+```bash
+cp .env.example .env          # set DEEPSEEK_ADMIN_PASSWORD first
+docker compose up -d --build
+```
+
+Open <http://127.0.0.1:8080/webui/>, add your DeepSeek credentials under Account Pool, and create a client API key under Settings.
+
+> Prefer Python? Jump to [Quick Start](#quick-start).
 
 ---
 
@@ -931,6 +955,10 @@ Install `requirements.txt`; the declared minimum versions are:
 | `pytest` | ≥8.0.0 | Offline tests |
 
 ---
+
+## Related Projects
+
+- [-yolov8-](https://github.com/aaron888hacker/-yolov8-) — Real-time sitting-posture detection GUI built on YOLOv8-Pose.
 
 ## License
 

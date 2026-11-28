@@ -1,10 +1,34 @@
 # DeepSeek Chat API Proxy
 
+[简体中文](README.md) · [English](README_en.md)
+
+<p align="center">
+  <a href="https://github.com/aaron888hacker/DeepSeek-web2api/stargazers"><img src="https://img.shields.io/github/stars/aaron888hacker/DeepSeek-web2api?style=flat-square&logo=github" alt="Stars"/></a>
+  <a href="https://github.com/aaron888hacker/DeepSeek-web2api/releases/latest"><img src="https://img.shields.io/github/v/release/aaron888hacker/DeepSeek-web2api?style=flat-square" alt="Latest release"/></a>
+  <img src="https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square&logo=python" alt="Python 3.10+"/>
+  <img src="https://img.shields.io/badge/license-GPL--3.0-blue?style=flat-square" alt="GPL-3.0"/>
+  <img src="https://img.shields.io/badge/docker-ready-2496ED?style=flat-square&logo=docker" alt="Docker ready"/>
+  <a href="https://github.com/aaron888hacker/DeepSeek-web2api/actions/workflows/ci.yml"><img src="https://github.com/aaron888hacker/DeepSeek-web2api/actions/workflows/ci.yml/badge.svg" alt="CI"/></a>
+</p>
+
 当前版本：**v1.0.0**
 
 > 将 DeepSeek Chat (chat.deepseek.com) 的私有 API 转换为 OpenAI / Anthropic 兼容格式。
 
 **免责声明**: 本项目仅限学习研究使用。非官方项目，与 DeepSeek 无关。使用需自行承担风险，不保证稳定性。
+
+> **为什么值得 Star？** 一个进程同时提供 OpenAI、Anthropic 与 Responses 三套兼容接口，内置流式输出、思维链、Function Calling、多账号池、限流、用量统计和 WebUI。如果你正在找“用网页版额度接入 OpenAI SDK / Claude Code”的方案，它可能正好省下你几天开发时间。
+
+## ⚡ 30 秒启动（Docker）
+
+```bash
+cp .env.example .env          # 先修改 DEEPSEEK_ADMIN_PASSWORD
+docker compose up -d --build
+```
+
+打开 <http://127.0.0.1:8080/webui/>，在「账号池」添加 DeepSeek 凭证，在「设置」创建客户端 API Key。
+
+> 不想用 Docker？跳到 [快速开始](#快速开始) 用 Python 启动。
 
 ---
 
@@ -932,6 +956,10 @@ Responses 的 TTL、记录数量、字节和历史深度限制独立配置，见
 | `pytest` | ≥8.0.0 | 离线测试 |
 
 ---
+
+## 相关项目
+
+- [-yolov8-](https://github.com/aaron888hacker/-yolov8-) — 基于 YOLOv8-Pose 的实时坐姿检测 GUI，支持图片、摄像头输入与多人姿态分析。
 
 ## 许可
 
